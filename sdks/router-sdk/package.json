@@ -35,11 +35,11 @@
   "dependencies": {
     "@ethersproject/abi": "^5.5.0",
     "@ethersproject/solidity": "^5.0.9",
-    "@dyadex-finance/sdk-core": "workspace:*",
+    "@dyadex-finance/sdk-core": "^7.13.0",
     "@uniswap/swap-router-contracts": "^1.3.0",
-    "@dyadex-finance/v2-sdk": "workspace:*",
-    "@dyadex-finance/v3-sdk": "workspace:*",
-    "@dyadex-finance/v4-sdk": "workspace:*",
+    "@dyadex-finance/v2-sdk": "^4.20.0",
+    "@dyadex-finance/v3-sdk": "^3.30.0",
+    "@dyadex-finance/v4-sdk": "^2.0.0",
     "jsbi": "^3.1.4",
     "tiny-invariant": "^1.1.0",
     "tslib": "^2.3.0"
