@@ -32,8 +32,7 @@ jobs:
     name: Release
     environment:
       name: production
-    runs-on:
-      group: npm-deploy
+    runs-on: ubuntu-latest
     permissions:
       contents: write # needed to create the "Version Packages" PR and push tags
       id-token: write # needed for npm trusted publishing (OIDC) and provenance
