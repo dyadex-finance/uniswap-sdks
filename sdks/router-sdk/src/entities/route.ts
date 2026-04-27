@@ -1,10 +1,10 @@
 // entities/route.ts
 
-import { Route as V2RouteSDK, Pair } from '@uniswap/v2-sdk'
-import { Route as V3RouteSDK, Pool as V3Pool } from '@uniswap/v3-sdk'
-import { Route as V4RouteSDK, Pool as V4Pool } from '@uniswap/v4-sdk'
+import { Route as V2RouteSDK, Pair } from '@dyadex-finance/v2-sdk'
+import { Route as V3RouteSDK, Pool as V3Pool } from '@dyadex-finance/v3-sdk'
+import { Route as V4RouteSDK, Pool as V4Pool } from '@dyadex-finance/v4-sdk'
 import { Protocol } from './protocol'
-import { Currency, Price, Token } from '@uniswap/sdk-core'
+import { Currency, Price, Token } from '@dyadex-finance/sdk-core'
 import { MixedRouteSDK } from './mixedRoute/route'
 
 // Helper function to get the pathInput and pathOutput for a V2 / V3 route

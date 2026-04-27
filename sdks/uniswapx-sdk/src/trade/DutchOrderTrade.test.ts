@@ -1,4 +1,4 @@
-import { Currency, Ether, Token, TradeType } from "@uniswap/sdk-core";
+import { Currency, Ether, Token, TradeType } from "@dyadex-finance/sdk-core";
 import { BigNumber, constants, ethers } from "ethers";
 
 import { DutchOrderInfo } from "../order";
@@ -10,13 +10,13 @@ const USDC = new Token(
   1,
   "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   6,
-  "USDC"
+  "USDC",
 );
 const DAI = new Token(
   1,
   "0x6B175474E89094C44Da98b954EedeAC495271d0F",
   18,
-  "DAI"
+  "DAI",
 );
 
 describe("DutchOrderTrade", () => {
@@ -64,19 +64,19 @@ describe("DutchOrderTrade", () => {
 
   it("returns the right input amount for an exact-in trade", () => {
     expect(trade.inputAmount.quotient.toString()).toEqual(
-      orderInfo.input.startAmount.toString()
+      orderInfo.input.startAmount.toString(),
     );
   });
 
   it("returns the correct non-fee output amount", () => {
     expect(trade.outputAmount.quotient.toString()).toEqual(
-      NON_FEE_OUTPUT_AMOUNT.toString()
+      NON_FEE_OUTPUT_AMOUNT.toString(),
     );
   });
 
   it("returns the correct minimum amount out", () => {
     expect(trade.minimumAmountOut().quotient.toString()).toEqual(
-      NON_FEE_MINIMUM_AMOUNT_OUT.toString()
+      NON_FEE_MINIMUM_AMOUNT_OUT.toString(),
     );
   });
 

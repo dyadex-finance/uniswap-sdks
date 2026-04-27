@@ -1,4 +1,9 @@
-import { Currency, CurrencyAmount, Price, TradeType } from "@uniswap/sdk-core";
+import {
+  Currency,
+  CurrencyAmount,
+  Price,
+  TradeType,
+} from "@dyadex-finance/sdk-core";
 
 import { BASE_SCALING_FACTOR } from "../constants/v4";
 import { CosignedHybridOrder } from "../order/v4/HybridOrder";
@@ -9,7 +14,7 @@ import { areCurrenciesEqual } from "./utils";
 export class HybridOrderTrade<
   TInput extends Currency,
   TOutput extends Currency,
-  TTradeType extends TradeType
+  TTradeType extends TradeType,
 > {
   public readonly tradeType: TTradeType;
   public readonly order: CosignedHybridOrder;
@@ -57,7 +62,7 @@ export class HybridOrderTrade<
       orderInfo,
       chainId,
       resolver,
-      permit2Address
+      permit2Address,
     );
   }
 
@@ -68,7 +73,7 @@ export class HybridOrderTrade<
       ? this.getExpectedAmountIn()
       : CurrencyAmount.fromRawAmount(
           this._currencyIn,
-          this.order.info.input.maxAmount.toString()
+          this.order.info.input.maxAmount.toString(),
         );
     this._inputAmount = amount;
     return amount;
@@ -79,7 +84,7 @@ export class HybridOrderTrade<
 
     const amounts = this.order.info.outputs.map((output: HybridOutput) => {
       const currencyOut = this._currenciesOut.find((currency) =>
-        areCurrenciesEqual(currency, output.token, currency.chainId)
+        areCurrenciesEqual(currency, output.token, currency.chainId),
       );
 
       if (!currencyOut) {
@@ -88,7 +93,7 @@ export class HybridOrderTrade<
 
       return CurrencyAmount.fromRawAmount(
         currencyOut,
-        output.minAmount.toString()
+        output.minAmount.toString(),
       );
     });
 
@@ -111,7 +116,7 @@ export class HybridOrderTrade<
     const firstOutput = this.order.info.outputs[0];
     return CurrencyAmount.fromRawAmount(
       this.outputAmount.currency,
-      firstOutput.minAmount.toString()
+      firstOutput.minAmount.toString(),
     );
   }
 
@@ -122,7 +127,7 @@ export class HybridOrderTrade<
   public maximumAmountIn(): CurrencyAmount<TInput> {
     return CurrencyAmount.fromRawAmount(
       this._currencyIn,
-      this.order.info.input.maxAmount.toString()
+      this.order.info.input.maxAmount.toString(),
     );
   }
 
@@ -138,7 +143,7 @@ export class HybridOrderTrade<
         this.inputAmount.currency,
         this.outputAmount.currency,
         this.inputAmount.quotient,
-        this.outputAmount.quotient
+        this.outputAmount.quotient,
       ))
     );
   }
@@ -152,7 +157,7 @@ export class HybridOrderTrade<
       this.inputAmount.currency,
       this.outputAmount.currency,
       this.maximumAmountIn().quotient,
-      this.minimumAmountOut().quotient
+      this.minimumAmountOut().quotient,
     );
   }
 
@@ -180,7 +185,7 @@ export class HybridOrderTrade<
 
     return CurrencyAmount.fromRawAmount(
       this._currencyIn,
-      this.expectedAmounts.expectedAmountIn
+      this.expectedAmounts.expectedAmountIn,
     );
   }
 
@@ -191,7 +196,7 @@ export class HybridOrderTrade<
 
     return CurrencyAmount.fromRawAmount(
       this._currenciesOut[0],
-      this.expectedAmounts.expectedAmountOut
+      this.expectedAmounts.expectedAmountOut,
     );
   }
 }

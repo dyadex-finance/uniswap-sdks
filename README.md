@@ -38,7 +38,7 @@ yarn changeset
 ```
 
 This interactive CLI will ask you:
-- **Which packages should be bumped?** Select the packages you directly changed (e.g., `@uniswap/sdk-core`).
+- **Which packages should be bumped?** Select the packages you directly changed (e.g., `@dyadex-finance/sdk-core`).
 - **What type of bump?** `patch`, `minor`, or `major`.
 - **Summary** A short description of the change (this becomes the changelog entry).
 
@@ -46,7 +46,7 @@ This creates a markdown file in `.changeset/` that looks like:
 
 ```md
 ---
-"@uniswap/sdk-core": minor
+"@dyadex-finance/sdk-core": minor
 ---
 
 Add support for Soneium chain

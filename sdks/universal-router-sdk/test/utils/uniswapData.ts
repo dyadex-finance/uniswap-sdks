@@ -1,7 +1,7 @@
 import JSBI from 'jsbi'
 import { ethers } from 'ethers'
-import { MixedRouteTrade, MixedRouteSDK, Trade as RouterTrade } from '@uniswap/router-sdk'
-import { Trade as V2Trade, Pair, Route as RouteV2, computePairAddress } from '@uniswap/v2-sdk'
+import { MixedRouteTrade, MixedRouteSDK, Trade as RouterTrade } from '@dyadex-finance/router-sdk'
+import { Trade as V2Trade, Pair, Route as RouteV2, computePairAddress } from '@dyadex-finance/v2-sdk'
 import {
   Trade as V3Trade,
   Pool,
@@ -10,13 +10,13 @@ import {
   TickMath,
   TICK_SPACINGS,
   FeeAmount,
-} from '@uniswap/v3-sdk'
-import { Pool as V4Pool, Route as RouteV4, Trade as V4Trade } from '@uniswap/v4-sdk'
+} from '@dyadex-finance/v3-sdk'
+import { Pool as V4Pool, Route as RouteV4, Trade as V4Trade } from '@dyadex-finance/v4-sdk'
 import { SwapOptions } from '../../src'
-import { CurrencyAmount, TradeType, Ether, Token, Percent, Currency } from '@uniswap/sdk-core'
+import { CurrencyAmount, TradeType, Ether, Token, Percent, Currency } from '@dyadex-finance/sdk-core'
 import IUniswapV3Pool from '@uniswap/v3-core/artifacts/contracts/UniswapV3Pool.sol/UniswapV3Pool.json'
 import { TEST_RECIPIENT_ADDRESS } from './addresses'
-import { encodeSqrtRatioX96 } from '@uniswap/v3-sdk'
+import { encodeSqrtRatioX96 } from '@dyadex-finance/v3-sdk'
 import { ZERO_ADDRESS } from '../../src/utils/constants'
 import { SwapRouter } from '../../src/swapRouter'
 

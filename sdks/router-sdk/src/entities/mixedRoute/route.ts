@@ -1,6 +1,6 @@
 import invariant from 'tiny-invariant'
-import { Currency, Price, Token } from '@uniswap/sdk-core'
-import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { Currency, Price, Token } from '@dyadex-finance/sdk-core'
+import { Pool as V4Pool } from '@dyadex-finance/v4-sdk'
 import { getPathCurrency } from '../../utils/pathCurrency'
 import { TPool } from '../../utils/TPool'
 

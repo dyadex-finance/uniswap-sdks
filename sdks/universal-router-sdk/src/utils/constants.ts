@@ -8,7 +8,7 @@ export enum UniversalRouterVersion {
 
 /**
  * Check if a UniversalRouterVersion is at least V2_1_1.
- * Duplicated from @uniswap/v4-sdk's isAtLeastV2_1_1 (which operates on URVersion)
+ * Duplicated from @dyadex-finance/v4-sdk's isAtLeastV2_1_1 (which operates on URVersion)
  * to avoid coupling universal-router-sdk's version logic to v4-sdk.
  */
 export function isAtLeastV2_1_1(version?: UniversalRouterVersion): boolean {

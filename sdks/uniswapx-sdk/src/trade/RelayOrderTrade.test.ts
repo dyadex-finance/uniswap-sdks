@@ -1,4 +1,9 @@
-import { Currency, CurrencyAmount, Token, TradeType } from "@uniswap/sdk-core";
+import {
+  Currency,
+  CurrencyAmount,
+  Token,
+  TradeType,
+} from "@dyadex-finance/sdk-core";
 import { BigNumber, ethers } from "ethers";
 
 import { RelayOrderInfo } from "../order";
@@ -9,13 +14,13 @@ const USDC = new Token(
   1,
   "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   6,
-  "USDC"
+  "USDC",
 );
 const DAI = new Token(
   1,
   "0x6B175474E89094C44Da98b954EedeAC495271d0F",
   18,
-  "DAI"
+  "DAI",
 );
 
 describe("RelayOrderTrade", () => {
@@ -26,7 +31,7 @@ describe("RelayOrderTrade", () => {
   // 1000 DAI
   const MOCK_SWAP_OUTPUT_AMOUNT = CurrencyAmount.fromRawAmount(
     DAI,
-    "1000000000000000000000"
+    "1000000000000000000000",
   );
   const OUTPUT_AMOUNT = BigNumber.from("1000000000000000000000");
 
@@ -54,7 +59,7 @@ describe("RelayOrderTrade", () => {
           recipient: "0x0000000000000000000000000000000000000001",
         },
       },
-      data
+      data,
     );
   };
 
@@ -73,19 +78,19 @@ describe("RelayOrderTrade", () => {
 
   it("returns the correct output amount", () => {
     expect(trade.outputAmount.quotient.toString()).toEqual(
-      OUTPUT_AMOUNT.toString()
+      OUTPUT_AMOUNT.toString(),
     );
   });
 
   it("returns the correct feeAmountIn", () => {
     expect(trade.amountInFee.quotient.toString()).toEqual(
-      FEE_START_AMOUNT.toString()
+      FEE_START_AMOUNT.toString(),
     );
   });
 
   it("returns the correct feeMaximumAmountIn", () => {
     expect(trade.maximumAmountInFee.quotient.toString()).toEqual(
-      FEE_END_AMOUNT.toString()
+      FEE_END_AMOUNT.toString(),
     );
   });
 
@@ -95,13 +100,13 @@ describe("RelayOrderTrade", () => {
       // outputs: 1000
       // expected execution price: 1000 / 1000 = 1
       expect(trade.executionPrice.quotient.toString()).toEqual(
-        "1000000000000000000"
+        "1000000000000000000",
       );
     });
 
     it("returns the correct worst execution price", () => {
       expect(trade.worstExecutionPrice().quotient.toString()).toEqual(
-        "1000000000000000000"
+        "1000000000000000000",
       );
     });
   });
@@ -135,13 +140,13 @@ describe("RelayOrderTrade", () => {
       // outputs: 1000
       // expected execution price: 1000 / 1000 = 1
       expect(trade.executionPrice.quotient.toString()).toEqual(
-        "1000000000000000000"
+        "1000000000000000000",
       );
     });
 
     it("returns the correct worst execution price", () => {
       expect(trade.worstExecutionPrice().quotient.toString()).toEqual(
-        "1000000000000000000"
+        "1000000000000000000",
       );
     });
   });

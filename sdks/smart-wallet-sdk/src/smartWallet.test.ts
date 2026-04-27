@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@dyadex-finance/sdk-core'
 import { decodeFunctionData } from 'viem'
 
 import abi from '../abis/MinimalDelegationEntry.json'

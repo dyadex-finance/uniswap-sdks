@@ -4,7 +4,7 @@ import {
   PermitTransferFromData,
   SignatureTransfer,
   Witness,
-} from "@uniswap/permit2-sdk";
+} from "@dyadex-finance/permit2-sdk";
 import { BigNumber, ethers } from "ethers";
 import { keccak256, toUtf8Bytes } from "ethers/lib/utils";
 
@@ -110,7 +110,7 @@ export class DutchOrder implements OffChainOrder {
   constructor(
     public readonly info: DutchOrderInfo,
     public readonly chainId: number,
-    readonly _permit2Address?: string
+    readonly _permit2Address?: string,
   ) {
     if (_permit2Address) {
       this.permit2Address = _permit2Address;
@@ -124,7 +124,7 @@ export class DutchOrder implements OffChainOrder {
   static fromJSON(
     json: DutchOrderInfoJSON,
     chainId: number,
-    _permit2Address?: string
+    _permit2Address?: string,
   ): DutchOrder {
     return new DutchOrder(
       {
@@ -144,7 +144,7 @@ export class DutchOrder implements OffChainOrder {
         })),
       },
       chainId,
-      _permit2Address
+      _permit2Address,
     );
   }
 
@@ -192,7 +192,7 @@ export class DutchOrder implements OffChainOrder {
             number,
             number,
             string,
-            boolean
+            boolean,
           ]) => {
             return {
               token,
@@ -200,11 +200,11 @@ export class DutchOrder implements OffChainOrder {
               endAmount,
               recipient,
             };
-          }
+          },
         ),
       },
       chainId,
-      permit2
+      permit2,
     );
   }
 
@@ -243,7 +243,7 @@ export class DutchOrder implements OffChainOrder {
    * @inheritdoc order
    */
   get blockOverrides(): BlockOverrides {
-    return undefined
+    return undefined;
   }
 
   /**
@@ -290,10 +290,10 @@ export class DutchOrder implements OffChainOrder {
           this.toPermit(),
           this.permit2Address,
           this.chainId,
-          this.witness()
+          this.witness(),
         ),
-        signature
-      )
+        signature,
+      ),
     );
   }
 
@@ -305,7 +305,7 @@ export class DutchOrder implements OffChainOrder {
       this.toPermit(),
       this.permit2Address,
       this.chainId,
-      this.witness()
+      this.witness(),
     ) as PermitTransferFromData;
   }
 
@@ -337,7 +337,7 @@ export class DutchOrder implements OffChainOrder {
             startAmount: this.info.input.startAmount,
             endAmount: this.info.input.endAmount,
           },
-          options.timestamp
+          options.timestamp,
         ),
       },
       outputs: this.info.outputs.map((output) => {
@@ -348,7 +348,7 @@ export class DutchOrder implements OffChainOrder {
             startAmount: output.startAmount,
             endAmount: output.endAmount,
           },
-          options.timestamp
+          options.timestamp,
         );
         let amount = baseAmount;
         // strict exclusivity means the order cant be resolved filled at any price

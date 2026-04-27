@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { CurrencyAmount, WETH9 } from '@dyadex-finance/sdk-core'
 import { ethers, BigNumber } from 'ethers'
 import { Route } from '../entities/route'
 import { Trade } from '../entities/trade'
@@ -7,7 +7,7 @@ import { encodeRouteToPath } from './encodeRouteToPath'
 import { V4BaseActionsParser, V4RouterCall, SwapExactIn, SwapExactOut } from './v4BaseActionsParser'
 import { V4Planner, Actions, URVersion } from './v4Planner'
 import { USDC_WETH, DAI_USDC, DAI, USDC } from './v4Planner.test'
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@dyadex-finance/sdk-core'
 import JSBI from 'jsbi'
 
 const addressOne = '0x0000000000000000000000000000000000000001'
@@ -343,7 +343,7 @@ describe('Version-aware Parser', () => {
       )
 
       const planner = new V4Planner()
-      planner.addTrade(trade, new (await import('@uniswap/sdk-core')).Percent('5')) // Default is V2.0
+      planner.addTrade(trade, new (await import('@dyadex-finance/sdk-core')).Percent('5')) // Default is V2.0
 
       const calldata = planner.finalize()
       const result = V4BaseActionsParser.parseCalldata(calldata) // Default is V2.0
@@ -400,7 +400,12 @@ describe('Version-aware Parser', () => {
       const maxHopSlippage = [BigNumber.from('15000'), BigNumber.from('25000')]
 
       const planner = new V4Planner()
-      planner.addTrade(trade, new (await import('@uniswap/sdk-core')).Percent('5'), maxHopSlippage, URVersion.V2_1_1)
+      planner.addTrade(
+        trade,
+        new (await import('@dyadex-finance/sdk-core')).Percent('5'),
+        maxHopSlippage,
+        URVersion.V2_1_1
+      )
 
       const calldata = planner.finalize()
       const result = V4BaseActionsParser.parseCalldata(calldata, URVersion.V2_1_1)

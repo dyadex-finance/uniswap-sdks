@@ -1,4 +1,9 @@
-import { Currency, CurrencyAmount, Price, TradeType } from "@uniswap/sdk-core";
+import {
+  Currency,
+  CurrencyAmount,
+  Price,
+  TradeType,
+} from "@dyadex-finance/sdk-core";
 
 import { RelayOrder, RelayOrderInfo } from "../order";
 
@@ -10,7 +15,7 @@ import { areCurrenciesEqual } from "./utils";
 export class RelayOrderTrade<
   TInput extends Currency,
   TOutput extends Currency,
-  TTradeType extends TradeType
+  TTradeType extends TradeType,
 > {
   public readonly tradeType: TTradeType;
   public readonly order: RelayOrder;
@@ -65,23 +70,23 @@ export class RelayOrderTrade<
 
     // assume single chain ids across all outputs for now
     const currencyIn = this._currenciesIn.find((currency) =>
-      areCurrenciesEqual(currency, this.order.info.fee.token, currency.chainId)
+      areCurrenciesEqual(currency, this.order.info.fee.token, currency.chainId),
     );
 
     if (!currencyIn) {
       throw new Error(
-        "currency output from order must exist in currenciesOut list"
+        "currency output from order must exist in currenciesOut list",
       );
     }
 
     const startEndAmounts = {
       startAmount: CurrencyAmount.fromRawAmount(
         currencyIn,
-        this.order.info.fee.startAmount.toString()
+        this.order.info.fee.startAmount.toString(),
       ),
       endAmount: CurrencyAmount.fromRawAmount(
         currencyIn,
-        this.order.info.fee.endAmount.toString()
+        this.order.info.fee.endAmount.toString(),
       ),
     };
 
@@ -102,19 +107,19 @@ export class RelayOrderTrade<
       areCurrenciesEqual(
         currency,
         this.order.info.input.token,
-        currency.chainId
-      )
+        currency.chainId,
+      ),
     );
 
     if (!currencyIn) {
       throw new Error(
-        "currency input from order must exist in currenciesIn list"
+        "currency input from order must exist in currenciesIn list",
       );
     }
 
     const inputAmount = CurrencyAmount.fromRawAmount(
       currencyIn,
-      this.order.info.input.amount.toString()
+      this.order.info.input.amount.toString(),
     );
 
     this._inputAmount = inputAmount;
@@ -148,7 +153,7 @@ export class RelayOrderTrade<
         this.amountIn.currency,
         this.outputAmount.currency,
         this.amountIn.quotient,
-        this.outputAmount.quotient
+        this.outputAmount.quotient,
       ))
     );
   }
@@ -163,7 +168,7 @@ export class RelayOrderTrade<
       this.amountIn.currency,
       this.outputAmount.currency,
       this.amountIn.quotient,
-      this.outputAmount.quotient
+      this.outputAmount.quotient,
     );
   }
 }

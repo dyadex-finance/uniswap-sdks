@@ -21,11 +21,14 @@ import {
   CosignedPriorityOrder,
 } from "../../src";
 import { StaticJsonRpcProvider } from "@ethersproject/providers";
-import { REACTOR_ADDRESS_MAPPING, UNISWAPX_ORDER_QUOTER_MAPPING } from "../../src/constants";
+import {
+  REACTOR_ADDRESS_MAPPING,
+  UNISWAPX_ORDER_QUOTER_MAPPING,
+} from "../../src/constants";
 import { parseEther } from "ethers/lib/utils";
-import { PERMIT2_ADDRESS } from "@uniswap/permit2-sdk";
+import { PERMIT2_ADDRESS } from "@dyadex-finance/permit2-sdk";
 
-if(!process.env.FORK_URL_8453) {
+if (!process.env.FORK_URL_8453) {
   throw new Error("FORK_URL_8453 not defined in environment");
 }
 
@@ -52,14 +55,26 @@ describe("PriorityOrderValidator", () => {
   beforeEach(async () => {
     chainId = 8453;
 
-    permit2 = new Contract(PERMIT2_ADDRESS, Permit2__factory.abi, provider) as Permit2;
-    reactor = new Contract(REACTOR_ADDRESS_MAPPING[chainId].Priority!, PriorityOrderReactorAbi.abi, provider) as PriorityOrderReactor;
-    quoter = new Contract(UNISWAPX_ORDER_QUOTER_MAPPING[chainId], OrderQuoterAbi.abi, provider) as OrderQuoter;
+    permit2 = new Contract(
+      PERMIT2_ADDRESS,
+      Permit2__factory.abi,
+      provider,
+    ) as Permit2;
+    reactor = new Contract(
+      REACTOR_ADDRESS_MAPPING[chainId].Priority!,
+      PriorityOrderReactorAbi.abi,
+      provider,
+    ) as PriorityOrderReactor;
+    quoter = new Contract(
+      UNISWAPX_ORDER_QUOTER_MAPPING[chainId],
+      OrderQuoterAbi.abi,
+      provider,
+    ) as OrderQuoter;
 
     builder = new PriorityOrderBuilder(
       chainId,
       reactor.address,
-      permit2.address
+      permit2.address,
     );
 
     swapper = ethers.Wallet.createRandom().connect(provider);
@@ -76,10 +91,10 @@ describe("PriorityOrderValidator", () => {
 
   const getCosignerData = (
     blockNumber: BigNumber,
-    overrides: Partial<PriorityCosignerData> = {}
+    overrides: Partial<PriorityCosignerData> = {},
   ): PriorityCosignerData => {
     const defaultData: PriorityCosignerData = {
-      auctionTargetBlock: blockNumber
+      auctionTargetBlock: blockNumber,
     };
     return Object.assign(defaultData, overrides);
   };
@@ -96,7 +111,7 @@ describe("PriorityOrderValidator", () => {
       .input({
         token: tokenIn.address,
         amount: BigNumber.from(0),
-        mpsPerPriorityFeeWei: BigNumber.from(0)
+        mpsPerPriorityFeeWei: BigNumber.from(0),
       })
       .output({
         token: ZERO_ADDRESS,
@@ -104,13 +119,13 @@ describe("PriorityOrderValidator", () => {
         mpsPerPriorityFeeWei: BigNumber.from(1),
         recipient: "0x0000000000000000000000000000000000000000",
       });
-    
+
     let unsignedPriorityOrder = preBuildOrder.buildPartial();
-    
+
     const cosignerData = getCosignerData(blockNumber, {});
     const cosignerHash = unsignedPriorityOrder.cosignatureHash(cosignerData);
     const cosignature = ethers.utils.joinSignature(
-      cosigner._signingKey().signDigest(cosignerHash)
+      cosigner._signingKey().signDigest(cosignerHash),
     );
 
     const order = preBuildOrder
@@ -121,11 +136,7 @@ describe("PriorityOrderValidator", () => {
     const { domain, types, values } = order.permitData();
     const signature = await swapper._signTypedData(domain, types, values);
 
-    const quoterLib = new OrderQuoterLib(
-      provider,
-      chainId,
-      quoter.address
-    );
+    const quoterLib = new OrderQuoterLib(provider, chainId, quoter.address);
     const { validation, quote } = await quoterLib.quote({ order, signature });
     expect(validation).to.equal(OrderValidation.OK);
     if (!quote) {
@@ -147,7 +158,7 @@ describe("PriorityOrderValidator", () => {
       .input({
         token: tokenIn.address,
         amount: BigNumber.from(0),
-        mpsPerPriorityFeeWei: BigNumber.from(0)
+        mpsPerPriorityFeeWei: BigNumber.from(0),
       })
       .output({
         token: ZERO_ADDRESS,
@@ -157,23 +168,23 @@ describe("PriorityOrderValidator", () => {
       });
 
     let unsignedPriorityOrder = preBuildOrder.buildPartial();
-    
+
     const cosignerData = getCosignerData(blockNumber, {});
     const cosignerHash = unsignedPriorityOrder.cosignatureHash(cosignerData);
     const cosignature = ethers.utils.joinSignature(
-      cosigner._signingKey().signDigest(cosignerHash)
+      cosigner._signingKey().signDigest(cosignerHash),
     );
-  
+
     const order = preBuildOrder
-        .cosignerData(cosignerData)
-        .cosignature(cosignature)
-        .build();
+      .cosignerData(cosignerData)
+      .cosignature(cosignature)
+      .build();
 
     const { domain, types, values } = order.permitData();
     const signature = await swapper._signTypedData(domain, types, values);
 
     expect(await validator.validate({ order, signature })).to.equal(
-      OrderValidation.OK
+      OrderValidation.OK,
     );
   });
 
@@ -190,7 +201,7 @@ describe("PriorityOrderValidator", () => {
       .input({
         token: tokenIn.address,
         amount: BigNumber.from(0),
-        mpsPerPriorityFeeWei: BigNumber.from(0)
+        mpsPerPriorityFeeWei: BigNumber.from(0),
       })
       .output({
         token: ZERO_ADDRESS,
@@ -198,13 +209,13 @@ describe("PriorityOrderValidator", () => {
         mpsPerPriorityFeeWei: BigNumber.from(1),
         recipient: "0x0000000000000000000000000000000000000000",
       });
-    
+
     let unsignedPriorityOrder = preBuildOrder.buildPartial();
-    
+
     const cosignerData = getCosignerData(auctionStartBlock, {});
     const cosignerHash = unsignedPriorityOrder.cosignatureHash(cosignerData);
     const cosignature = ethers.utils.joinSignature(
-      cosigner._signingKey().signDigest(cosignerHash)
+      cosigner._signingKey().signDigest(cosignerHash),
     );
 
     const order = preBuildOrder
@@ -216,7 +227,7 @@ describe("PriorityOrderValidator", () => {
     const signature = await swapper._signTypedData(domain, types, values);
 
     expect(await validator.validate({ order, signature })).to.equal(
-      OrderValidation.OrderNotFillableYet
+      OrderValidation.OrderNotFillableYet,
     );
   });
 
@@ -232,7 +243,7 @@ describe("PriorityOrderValidator", () => {
       .input({
         token: tokenIn.address,
         amount: BigNumber.from(0),
-        mpsPerPriorityFeeWei: BigNumber.from(0)
+        mpsPerPriorityFeeWei: BigNumber.from(0),
       })
       .output({
         token: ZERO_ADDRESS,
@@ -242,17 +253,17 @@ describe("PriorityOrderValidator", () => {
       });
 
     let unsignedPriorityOrder = preBuildOrder.buildPartial();
-    
+
     const cosignerData = getCosignerData(blockNumber, {});
     const cosignerHash = unsignedPriorityOrder.cosignatureHash(cosignerData);
     const cosignature = ethers.utils.joinSignature(
-      cosigner._signingKey().signDigest(cosignerHash)
+      cosigner._signingKey().signDigest(cosignerHash),
     );
-  
+
     let order = preBuildOrder
-        .cosignerData(cosignerData)
-        .cosignature(cosignature)
-        .build();
+      .cosignerData(cosignerData)
+      .cosignature(cosignature)
+      .build();
 
     order = new CosignedPriorityOrder(
       Object.assign(order.info, {
@@ -263,14 +274,14 @@ describe("PriorityOrderValidator", () => {
         },
       }),
       chainId,
-      permit2.address
-    )
+      permit2.address,
+    );
 
     const { domain, types, values } = order.permitData();
     const signature = await swapper._signTypedData(domain, types, values);
 
     expect(await validator.validate({ order, signature })).to.equal(
-      OrderValidation.InvalidOrderFields
+      OrderValidation.InvalidOrderFields,
     );
   });
 
@@ -285,7 +296,7 @@ describe("PriorityOrderValidator", () => {
       .swapper(swapperAddress)
       .input({
         token: tokenIn.address,
-        amount: parseEther('2'),
+        amount: parseEther("2"),
         mpsPerPriorityFeeWei: BigNumber.from(0),
       })
       .output({
@@ -294,12 +305,12 @@ describe("PriorityOrderValidator", () => {
         mpsPerPriorityFeeWei: BigNumber.from(1),
         recipient: "0x0000000000000000000000000000000000000000",
       });
-    
+
     let unsignedPriorityOrder = preBuildOrder.buildPartial();
     const cosignerData = getCosignerData(blockNumber, {});
     const cosignerHash = unsignedPriorityOrder.cosignatureHash(cosignerData);
     const cosignature = ethers.utils.joinSignature(
-      cosigner._signingKey().signDigest(cosignerHash)
+      cosigner._signingKey().signDigest(cosignerHash),
     );
 
     const order = preBuildOrder
@@ -311,7 +322,7 @@ describe("PriorityOrderValidator", () => {
     const signature = await swapper._signTypedData(domain, types, values);
 
     expect(await validator.validate({ order, signature })).to.equal(
-      OrderValidation.InsufficientFunds
+      OrderValidation.InsufficientFunds,
     );
   });
 
@@ -327,7 +338,7 @@ describe("PriorityOrderValidator", () => {
       .swapper(swapperAddress)
       .input({
         token: tokenIn.address,
-        amount: parseEther('2'),
+        amount: parseEther("2"),
         mpsPerPriorityFeeWei: BigNumber.from(0),
       })
       .output({
@@ -336,12 +347,12 @@ describe("PriorityOrderValidator", () => {
         mpsPerPriorityFeeWei: BigNumber.from(1),
         recipient: "0x0000000000000000000000000000000000000000",
       });
-    
+
     let unsignedPriorityOrder = preBuildOrder.buildPartial();
     const cosignerData = getCosignerData(auctionStartBlock, {});
     const cosignerHash = unsignedPriorityOrder.cosignatureHash(cosignerData);
     const cosignature = ethers.utils.joinSignature(
-      cosigner._signingKey().signDigest(cosignerHash)
+      cosigner._signingKey().signDigest(cosignerHash),
     );
 
     const order = preBuildOrder
@@ -354,7 +365,7 @@ describe("PriorityOrderValidator", () => {
 
     // even though the auctionStartBlock is in the future, we expect to bubble up all other errors before that one
     expect(await validator.validate({ order, signature })).to.equal(
-      OrderValidation.InsufficientFunds
+      OrderValidation.InsufficientFunds,
     );
   });
 
@@ -370,7 +381,7 @@ describe("PriorityOrderValidator", () => {
       .input({
         token: tokenIn.address,
         amount: BigNumber.from(0),
-        mpsPerPriorityFeeWei: BigNumber.from(0)
+        mpsPerPriorityFeeWei: BigNumber.from(0),
       })
       .output({
         token: ZERO_ADDRESS,
@@ -379,11 +390,12 @@ describe("PriorityOrderValidator", () => {
         recipient: "0x0000000000000000000000000000000000000000",
       });
 
-
     const cosignerData = getCosignerData(blockNumber, {});
-    const cosignerHash = preBuildOrder.buildPartial().cosignatureHash(cosignerData);
+    const cosignerHash = preBuildOrder
+      .buildPartial()
+      .cosignatureHash(cosignerData);
     const cosignature = ethers.utils.joinSignature(
-      cosigner._signingKey().signDigest(cosignerHash)
+      cosigner._signingKey().signDigest(cosignerHash),
     );
 
     let order = preBuildOrder
@@ -392,18 +404,18 @@ describe("PriorityOrderValidator", () => {
       .build();
 
     order = new CosignedPriorityOrder(
-        Object.assign(order.info, {
-          deadline: deadline - 100
-        }),
-        chainId,
-        permit2.address
-      )
+      Object.assign(order.info, {
+        deadline: deadline - 100,
+      }),
+      chainId,
+      permit2.address,
+    );
 
     const { domain, types, values } = order.permitData();
     const signature = await swapper._signTypedData(domain, types, values);
 
     expect(await validator.validate({ order, signature })).to.equal(
-      OrderValidation.Expired
+      OrderValidation.Expired,
     );
   });
 });

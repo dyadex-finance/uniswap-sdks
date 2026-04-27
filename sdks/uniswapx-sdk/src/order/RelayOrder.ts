@@ -4,7 +4,7 @@ import {
   PermitBatchTransferFromData,
   SignatureTransfer,
   Witness,
-} from "@uniswap/permit2-sdk";
+} from "@dyadex-finance/permit2-sdk";
 import { BigNumber, ethers } from "ethers";
 
 import { PERMIT2_MAPPING } from "../constants";
@@ -12,7 +12,12 @@ import { MissingConfiguration } from "../errors";
 import { ResolvedRelayOrder } from "../utils/OrderQuoter";
 import { getDecayedAmount } from "../utils/dutchDecay";
 
-import { BlockOverrides, OffChainOrder, OrderInfo, OrderResolutionOptions } from "./types";
+import {
+  BlockOverrides,
+  OffChainOrder,
+  OrderInfo,
+  OrderResolutionOptions,
+} from "./types";
 
 export type RelayInput = {
   readonly token: string;
@@ -109,7 +114,7 @@ export class RelayOrder implements OffChainOrder {
   constructor(
     public readonly info: RelayOrderInfo,
     public readonly chainId: number,
-    readonly _permit2Address?: string
+    readonly _permit2Address?: string,
   ) {
     if (_permit2Address) {
       this.permit2Address = _permit2Address;
@@ -123,7 +128,7 @@ export class RelayOrder implements OffChainOrder {
   static fromJSON(
     json: RelayOrderInfoJSON,
     chainId: number,
-    _permit2Address?: string
+    _permit2Address?: string,
   ): RelayOrder {
     return new RelayOrder(
       {
@@ -143,7 +148,7 @@ export class RelayOrder implements OffChainOrder {
         },
       },
       chainId,
-      _permit2Address
+      _permit2Address,
     );
   }
 
@@ -179,7 +184,7 @@ export class RelayOrder implements OffChainOrder {
         universalRouterCalldata: universalRouterCalldata,
       },
       chainId,
-      permit2
+      permit2,
     );
   }
 
@@ -214,7 +219,7 @@ export class RelayOrder implements OffChainOrder {
    * @inheritdoc order
    */
   get blockOverrides(): BlockOverrides {
-    return undefined
+    return undefined;
   }
 
   serialize(): string {
@@ -254,10 +259,10 @@ export class RelayOrder implements OffChainOrder {
           this.toPermit(),
           this.permit2Address,
           this.chainId,
-          this.witness()
+          this.witness(),
         ),
-        signature
-      )
+        signature,
+      ),
     );
   }
 
@@ -269,7 +274,7 @@ export class RelayOrder implements OffChainOrder {
       this.toPermit(),
       this.permit2Address,
       this.chainId,
-      this.witness()
+      this.witness(),
     ) as PermitBatchTransferFromData;
   }
 
@@ -297,7 +302,7 @@ export class RelayOrder implements OffChainOrder {
             startAmount: this.info.fee.startAmount,
             endAmount: this.info.fee.endAmount,
           },
-          options.timestamp
+          options.timestamp,
         ),
       },
     };

@@ -4,7 +4,7 @@ import {
   PermitTransferFromData,
   SignatureTransfer,
   Witness,
-} from "@uniswap/permit2-sdk";
+} from "@dyadex-finance/permit2-sdk";
 import { BigNumber, ethers } from "ethers";
 
 import { MPS } from "../constants";
@@ -127,7 +127,7 @@ export class UnsignedPriorityOrder implements OffChainOrder {
   constructor(
     public readonly info: UnsignedPriorityOrderInfo,
     public readonly chainId: number,
-    _permit2Address?: string
+    _permit2Address?: string,
   ) {
     this.permit2Address = getPermit2(chainId, _permit2Address);
   }
@@ -135,7 +135,7 @@ export class UnsignedPriorityOrder implements OffChainOrder {
   static fromJSON(
     json: UnsignedPriorityOrderInfoJSON,
     chainId: number,
-    _permit2Address?: string
+    _permit2Address?: string,
   ): UnsignedPriorityOrder {
     return new UnsignedPriorityOrder(
       {
@@ -157,19 +157,19 @@ export class UnsignedPriorityOrder implements OffChainOrder {
         })),
       },
       chainId,
-      _permit2Address
+      _permit2Address,
     );
   }
 
   static parse(
     encoded: string,
     chainId: number,
-    permit2?: string
+    permit2?: string,
   ): UnsignedPriorityOrder {
     return new UnsignedPriorityOrder(
       parseSerializedOrder(encoded),
       chainId,
-      permit2
+      permit2,
     );
   }
 
@@ -210,11 +210,10 @@ export class UnsignedPriorityOrder implements OffChainOrder {
    * @inheritdoc Order
    */
   get blockOverrides(): BlockOverrides {
-      return {
-        number: hexStripZeros(this.info.auctionStartBlock.toHexString()),
-      };
+    return {
+      number: hexStripZeros(this.info.auctionStartBlock.toHexString()),
+    };
   }
-  
 
   /**
    * @inheritdoc order
@@ -262,10 +261,10 @@ export class UnsignedPriorityOrder implements OffChainOrder {
           this.toPermit(),
           this.permit2Address,
           this.chainId,
-          this.witness()
+          this.witness(),
         ),
-        signature
-      )
+        signature,
+      ),
     );
   }
 
@@ -277,7 +276,7 @@ export class UnsignedPriorityOrder implements OffChainOrder {
       this.toPermit(),
       this.permit2Address,
       this.chainId,
-      this.witness()
+      this.witness(),
     ) as PermitTransferFromData;
   }
 
@@ -359,9 +358,9 @@ export class UnsignedPriorityOrder implements OffChainOrder {
         this.chainId,
         abiCoder.encode(
           [PRIORITY_COSIGNER_DATA_TUPLE_ABI],
-          [[cosignerData.auctionTargetBlock]]
+          [[cosignerData.auctionTargetBlock]],
         ),
-      ]
+      ],
     );
   }
 }
@@ -371,7 +370,7 @@ export class CosignedPriorityOrder extends UnsignedPriorityOrder {
   static fromUnsignedOrder(
     order: UnsignedPriorityOrder,
     cosignerData: PriorityCosignerData,
-    cosignature: string
+    cosignature: string,
   ): CosignedPriorityOrder {
     return new CosignedPriorityOrder(
       {
@@ -380,7 +379,7 @@ export class CosignedPriorityOrder extends UnsignedPriorityOrder {
         cosignature,
       },
       order.chainId,
-      order.permit2Address
+      order.permit2Address,
     );
   }
 
@@ -388,7 +387,7 @@ export class CosignedPriorityOrder extends UnsignedPriorityOrder {
   static fromJSON(
     json: CosignedPriorityOrderInfoJSON,
     chainId: number,
-    _permit2Address?: string
+    _permit2Address?: string,
   ): CosignedPriorityOrder {
     return new CosignedPriorityOrder(
       {
@@ -410,13 +409,13 @@ export class CosignedPriorityOrder extends UnsignedPriorityOrder {
         })),
         cosignerData: {
           auctionTargetBlock: BigNumber.from(
-            json.cosignerData.auctionTargetBlock
+            json.cosignerData.auctionTargetBlock,
           ),
         },
         cosignature: json.cosignature,
       },
       chainId,
-      _permit2Address
+      _permit2Address,
     );
   }
 
@@ -424,19 +423,19 @@ export class CosignedPriorityOrder extends UnsignedPriorityOrder {
   static parse(
     encoded: string,
     chainId: number,
-    permit2?: string
+    permit2?: string,
   ): CosignedPriorityOrder {
     return new CosignedPriorityOrder(
       parseSerializedOrder(encoded),
       chainId,
-      permit2
+      permit2,
     );
   }
 
   constructor(
     public readonly info: CosignedPriorityOrderInfo,
     public readonly chainId: number,
-    _permit2Address?: string
+    _permit2Address?: string,
   ) {
     super(info, chainId, _permit2Address);
   }
@@ -486,7 +485,9 @@ export class CosignedPriorityOrder extends UnsignedPriorityOrder {
    */
   get blockOverrides(): BlockOverrides {
     return {
-      number: hexStripZeros(this.info.cosignerData.auctionTargetBlock.toHexString()),
+      number: hexStripZeros(
+        this.info.cosignerData.auctionTargetBlock.toHexString(),
+      ),
     };
   }
 
@@ -532,7 +533,7 @@ export class CosignedPriorityOrder extends UnsignedPriorityOrder {
   recoverCosigner(): string {
     return ethers.utils.verifyMessage(
       this.cosignatureHash(this.info.cosignerData),
-      this.info.cosignature
+      this.info.cosignature,
     );
   }
 }
@@ -580,7 +581,7 @@ function parseSerializedOrder(serialized: string): CosignedPriorityOrderInfo {
         string,
         BigNumber,
         BigNumber,
-        string
+        string,
       ]) => {
         return {
           token,
@@ -588,7 +589,7 @@ function parseSerializedOrder(serialized: string): CosignedPriorityOrderInfo {
           mpsPerPriorityFeeWei,
           recipient,
         };
-      }
+      },
     ),
     cosignerData: {
       auctionTargetBlock,
@@ -608,11 +609,11 @@ function scaleInput(input: PriorityInput, priorityFee: BigNumber): BigNumber {
 
 function scaleOutputs(
   outputs: PriorityOutput[],
-  priorityFee: BigNumber
+  priorityFee: BigNumber,
 ): PriorityOutput[] {
   return outputs.map((output) => {
     const product = output.amount.mul(
-      MPS.add(priorityFee.mul(output.mpsPerPriorityFeeWei))
+      MPS.add(priorityFee.mul(output.mpsPerPriorityFeeWei)),
     );
     const mod = product.mod(MPS);
     const div = product.div(MPS);

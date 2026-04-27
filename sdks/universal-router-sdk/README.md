@@ -11,10 +11,10 @@ Install latest version of universal-router-sdk. Then import the corresponding Tr
 warning: `swapERC20CallParameters()` to be deprecated in favor of `swapCallParameters()`
 
 ```typescript
-import { TradeType } from '@uniswap/sdk-core'
-import { Trade as V2TradeSDK } from '@uniswap/v2-sdk'
-import { Trade as V3TradeSDK } from '@uniswap/v3-sdk'
-import { MixedRouteTrade, MixedRouteSDK, Trade as RouterTrade } from '@uniswap/router-sdk'
+import { TradeType } from '@dyadex-finance/sdk-core'
+import { Trade as V2TradeSDK } from '@dyadex-finance/v2-sdk'
+import { Trade as V3TradeSDK } from '@dyadex-finance/v3-sdk'
+import { MixedRouteTrade, MixedRouteSDK, Trade as RouterTrade } from '@dyadex-finance/router-sdk'
 
 const options = { slippageTolerance, recipient }
 const routerTrade = new RouterTrade({ v2Routes, v3Routes, mixedRoutes, tradeType: TradeType.EXACT_INPUT })
@@ -51,9 +51,9 @@ To enable the V2.1.1 ABI encoding (which includes the `maxHopSlippage` parameter
 
 ```typescript
 import { SwapRouter } from '@uniswap/universal-router-sdk'
-import { Trade as RouterTrade } from '@uniswap/router-sdk'
-import { URVersion } from '@uniswap/v4-sdk'
-import { Percent, TradeType } from '@uniswap/sdk-core'
+import { Trade as RouterTrade } from '@dyadex-finance/router-sdk'
+import { URVersion } from '@dyadex-finance/v4-sdk'
+import { Percent, TradeType } from '@dyadex-finance/sdk-core'
 
 // 1. Build a trade with per-hop slippage on each route
 const trade = new RouterTrade({

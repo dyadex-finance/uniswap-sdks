@@ -1,4 +1,4 @@
-import { Currency, Ether, Token, TradeType } from "@uniswap/sdk-core";
+import { Currency, Ether, Token, TradeType } from "@dyadex-finance/sdk-core";
 import { BigNumber, constants, ethers } from "ethers";
 
 import { UnsignedPriorityOrderInfo } from "../order";
@@ -11,13 +11,13 @@ const USDC = new Token(
   1,
   "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   6,
-  "USDC"
+  "USDC",
 );
 const DAI = new Token(
   1,
   "0x6B175474E89094C44Da98b954EedeAC495271d0F",
   18,
-  "DAI"
+  "DAI",
 );
 
 describe("PriorityOrderTrade", () => {
@@ -63,19 +63,19 @@ describe("PriorityOrderTrade", () => {
 
   it("returns the right input amount for an exact-in trade", () => {
     expect(trade.inputAmount.quotient.toString()).toEqual(
-      orderInfo.input.amount.toString()
+      orderInfo.input.amount.toString(),
     );
   });
 
   it("returns the correct non-fee output amount", () => {
     expect(trade.outputAmount.quotient.toString()).toEqual(
-      NON_FEE_OUTPUT_AMOUNT.toString()
+      NON_FEE_OUTPUT_AMOUNT.toString(),
     );
   });
 
   it("returns the correct minimum amount out", () => {
     expect(trade.minimumAmountOut().quotient.toString()).toEqual(
-      NON_FEE_OUTPUT_AMOUNT.toString()
+      NON_FEE_OUTPUT_AMOUNT.toString(),
     );
   });
 
@@ -91,14 +91,16 @@ describe("PriorityOrderTrade", () => {
         },
       ],
     };
-    const ethOutputTrade = new PriorityOrderTrade<Currency, Currency, TradeType>(
-      {
-        currencyIn: USDC,
-        currenciesOut: [Ether.onChain(1)],
-        orderInfo: ethOutputOrderInfo,
-        tradeType: TradeType.EXACT_INPUT,
-      }
-    );
+    const ethOutputTrade = new PriorityOrderTrade<
+      Currency,
+      Currency,
+      TradeType
+    >({
+      currencyIn: USDC,
+      currenciesOut: [Ether.onChain(1)],
+      orderInfo: ethOutputOrderInfo,
+      tradeType: TradeType.EXACT_INPUT,
+    });
     expect(ethOutputTrade.outputAmount.currency).toEqual(Ether.onChain(1));
   });
 
@@ -114,14 +116,16 @@ describe("PriorityOrderTrade", () => {
         },
       ],
     };
-    const ethOutputTrade = new PriorityOrderTrade<Currency, Currency, TradeType>(
-      {
-        currencyIn: USDC,
-        currenciesOut: [Ether.onChain(1)],
-        orderInfo: ethOutputOrderInfo,
-        tradeType: TradeType.EXACT_INPUT,
-      }
-    );
+    const ethOutputTrade = new PriorityOrderTrade<
+      Currency,
+      Currency,
+      TradeType
+    >({
+      currencyIn: USDC,
+      currenciesOut: [Ether.onChain(1)],
+      orderInfo: ethOutputOrderInfo,
+      tradeType: TradeType.EXACT_INPUT,
+    });
     expect(ethOutputTrade.outputAmount.currency).toEqual(Ether.onChain(1));
   });
 
@@ -142,10 +146,10 @@ describe("PriorityOrderTrade", () => {
       expectedAmounts,
     });
     expect(expectedAmountTrade.inputAmount.quotient.toString()).toEqual(
-      expectedAmounts.expectedAmountIn
+      expectedAmounts.expectedAmountIn,
     );
     expect(expectedAmountTrade.outputAmount.quotient.toString()).toEqual(
-      expectedAmounts.expectedAmountOut
+      expectedAmounts.expectedAmountOut,
     );
   });
 });

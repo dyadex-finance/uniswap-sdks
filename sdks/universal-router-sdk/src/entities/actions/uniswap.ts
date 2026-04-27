@@ -1,6 +1,6 @@
 import { RoutePlanner, CommandType } from '../../utils/routerCommands'
-import { Trade as V2Trade, Pair } from '@uniswap/v2-sdk'
-import { Trade as V3Trade, Pool as V3Pool, encodeRouteToPath } from '@uniswap/v3-sdk'
+import { Trade as V2Trade, Pair } from '@dyadex-finance/v2-sdk'
+import { Trade as V3Trade, Pool as V3Pool, encodeRouteToPath } from '@dyadex-finance/v3-sdk'
 import {
   Route as V4Route,
   Trade as V4Trade,
@@ -9,7 +9,7 @@ import {
   encodeRouteToPath as encodeV4RouteToPath,
   Actions,
   URVersion,
-} from '@uniswap/v4-sdk'
+} from '@dyadex-finance/v4-sdk'
 import {
   Trade as RouterTrade,
   MixedRouteTrade,
@@ -23,10 +23,10 @@ import {
   getOutputOfPools,
   encodeMixedRouteToPath,
   partitionMixedRouteByProtocol,
-} from '@uniswap/router-sdk'
+} from '@dyadex-finance/router-sdk'
 import { Permit2Permit } from '../../utils/inputTokens'
 import { getPathCurrency } from '../../utils/pathCurrency'
-import { Currency, TradeType, Token, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, TradeType, Token, CurrencyAmount, Percent } from '@dyadex-finance/sdk-core'
 import { Command, RouterActionType, TradeConfig } from '../Command'
 import {
   SENDER_AS_RECIPIENT,
@@ -39,7 +39,7 @@ import {
 import { getCurrencyAddress } from '../../utils/getCurrencyAddress'
 import { encodeFeeBips, encodeFee1e18 } from '../../utils/numbers'
 import { BigNumber, BigNumberish } from 'ethers'
-import { TPool } from '@uniswap/router-sdk'
+import { TPool } from '@dyadex-finance/router-sdk'
 
 export type FlatFeeOptions = {
   amount: BigNumberish

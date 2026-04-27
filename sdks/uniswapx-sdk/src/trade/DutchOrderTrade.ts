@@ -1,4 +1,9 @@
-import { Currency, CurrencyAmount, Price, TradeType } from "@uniswap/sdk-core";
+import {
+  Currency,
+  CurrencyAmount,
+  Price,
+  TradeType,
+} from "@dyadex-finance/sdk-core";
 
 import { DutchOrder, DutchOrderInfo } from "../order";
 
@@ -7,7 +12,7 @@ import { areCurrenciesEqual } from "./utils";
 export class DutchOrderTrade<
   TInput extends Currency,
   TOutput extends Currency,
-  TTradeType extends TradeType
+  TTradeType extends TradeType,
 > {
   public readonly tradeType: TTradeType;
   public readonly order: DutchOrder;
@@ -42,7 +47,7 @@ export class DutchOrderTrade<
 
     const amount = CurrencyAmount.fromRawAmount(
       this._currencyIn,
-      this.order.info.input.startAmount.toString()
+      this.order.info.input.startAmount.toString(),
     );
     this._inputAmount = amount;
     return amount;
@@ -54,7 +59,7 @@ export class DutchOrderTrade<
     const amounts = this.order.info.outputs.map((output) => {
       // assume single chain ids across all outputs for now
       const currencyOut = this._currenciesOut.find((currency) =>
-        areCurrenciesEqual(currency, output.token, currency.chainId)
+        areCurrenciesEqual(currency, output.token, currency.chainId),
       );
 
       if (!currencyOut) {
@@ -63,7 +68,7 @@ export class DutchOrderTrade<
 
       return CurrencyAmount.fromRawAmount(
         currencyOut,
-        output.startAmount.toString()
+        output.startAmount.toString(),
       );
     });
 
@@ -92,23 +97,23 @@ export class DutchOrderTrade<
 
     // assume single chain ids across all outputs for now
     const currencyOut = this._currenciesOut.find((currency) =>
-      areCurrenciesEqual(currency, output.token, currency.chainId)
+      areCurrenciesEqual(currency, output.token, currency.chainId),
     );
 
     if (!currencyOut) {
       throw new Error(
-        "currency output from order must exist in currenciesOut list"
+        "currency output from order must exist in currenciesOut list",
       );
     }
 
     const startEndAmounts = {
       startAmount: CurrencyAmount.fromRawAmount(
         currencyOut,
-        output.startAmount.toString()
+        output.startAmount.toString(),
       ),
       endAmount: CurrencyAmount.fromRawAmount(
         currencyOut,
-        output.endAmount.toString()
+        output.endAmount.toString(),
       ),
     };
 
@@ -128,7 +133,7 @@ export class DutchOrderTrade<
   public maximumAmountIn(): CurrencyAmount<TInput> {
     return CurrencyAmount.fromRawAmount(
       this._currencyIn,
-      this.order.info.input.endAmount.toString()
+      this.order.info.input.endAmount.toString(),
     );
   }
 
@@ -144,7 +149,7 @@ export class DutchOrderTrade<
         this.inputAmount.currency,
         this.outputAmount.currency,
         this.inputAmount.quotient,
-        this.outputAmount.quotient
+        this.outputAmount.quotient,
       ))
     );
   }
@@ -158,7 +163,7 @@ export class DutchOrderTrade<
       this.inputAmount.currency,
       this.outputAmount.currency,
       this.maximumAmountIn().quotient,
-      this.minimumAmountOut().quotient
+      this.minimumAmountOut().quotient,
     );
   }
 }

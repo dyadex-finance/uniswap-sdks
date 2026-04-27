@@ -8,7 +8,7 @@ import {
   Position as V3Position,
   NonfungiblePositionManager as V3PositionManager,
   RemoveLiquidityOptions as V3RemoveLiquidityOptions,
-} from '@uniswap/v3-sdk'
+} from '@dyadex-finance/v3-sdk'
 import {
   Position as V4Position,
   V4PositionManager,
@@ -16,9 +16,9 @@ import {
   MintOptions,
   Pool as V4Pool,
   PoolKey,
-} from '@uniswap/v4-sdk'
-import { Trade as RouterTrade } from '@uniswap/router-sdk'
-import { Currency, TradeType, Percent, CHAIN_TO_ADDRESSES_MAP, SupportedChainsType } from '@uniswap/sdk-core'
+} from '@dyadex-finance/v4-sdk'
+import { Trade as RouterTrade } from '@dyadex-finance/router-sdk'
+import { Currency, TradeType, Percent, CHAIN_TO_ADDRESSES_MAP, SupportedChainsType } from '@dyadex-finance/sdk-core'
 import { UniswapTrade, SwapOptions, TokenTransferMode } from './entities/actions/uniswap'
 import { AcrossV4DepositV3Params } from './entities/actions/across'
 import { RoutePlanner, CommandType } from './utils/routerCommands'

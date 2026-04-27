@@ -1,4 +1,4 @@
-import { ChainId, Currency } from "@uniswap/sdk-core";
+import { Currency } from "@dyadex-finance/sdk-core";
 import { constants } from "ethers";
 
 export enum NativeAssets {
@@ -10,12 +10,6 @@ export enum NativeAssets {
 
 function nativeCurrencyAddressString(chainId: number): string {
   switch (chainId) {
-    case ChainId.POLYGON:
-      return NativeAssets.MATIC;
-    case ChainId.BNB:
-      return NativeAssets.BNB;
-    case ChainId.AVALANCHE:
-      return NativeAssets.AVAX;
     default:
       return NativeAssets.ETH;
   }
@@ -24,7 +18,7 @@ function nativeCurrencyAddressString(chainId: number): string {
 export function areCurrenciesEqual(
   currency: Currency,
   address: string | null,
-  chainId: number
+  chainId: number,
 ) {
   if (currency.chainId !== chainId) return false;
 

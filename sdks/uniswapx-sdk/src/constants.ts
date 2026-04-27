@@ -1,19 +1,13 @@
-import { ChainId } from "@uniswap/sdk-core";
+import { ChainId } from "@dyadex-finance/sdk-core";
 import { BigNumber } from "ethers";
 
 type AddressMap = { readonly [key: number]: string };
 
-const NETWORKS_WITH_SAME_ADDRESS: ChainId[] = [
-  ChainId.MAINNET,
-  ChainId.GOERLI,
-  ChainId.POLYGON,
-  ChainId.BASE,
-  ChainId.UNICHAIN,
-];
+const NETWORKS_WITH_SAME_ADDRESS: ChainId[] = [];
 
 export function constructSameAddressMap<T>(
   address: T,
-  additionalNetworks: ChainId[] = []
+  additionalNetworks: ChainId[] = [],
 ): { [chainId: number]: T } {
   return NETWORKS_WITH_SAME_ADDRESS.concat(additionalNetworks).reduce<{
     [chainId: number]: T;
@@ -24,10 +18,9 @@ export function constructSameAddressMap<T>(
 }
 
 export const PERMIT2_MAPPING: AddressMap = {
-  ...constructSameAddressMap(
-    "0x000000000022d473030f116ddee9f6b43ac78ba3",
-    [11155111, 42161]
-  ),
+  ...constructSameAddressMap("0x000000000022d473030f116ddee9f6b43ac78ba3", [
+    ChainId.MONAD,
+  ]),
   12341234: "0x000000000022d473030f116ddee9f6b43ac78ba3",
   1301: "0x000000000022d473030f116ddee9f6b43ac78ba3",
 };
@@ -156,7 +149,7 @@ export const RELAY_SENTINEL_RECIPIENT =
   "0x0000000000000000000000000000000000000000";
 
 export const REVERSE_REACTOR_MAPPING: ReverseReactorMapping = Object.entries(
-  REACTOR_ADDRESS_MAPPING
+  REACTOR_ADDRESS_MAPPING,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 ).reduce((acc: ReverseReactorMapping, [_, orderTypes]) => {
   for (const [orderType, reactorAddress] of Object.entries(orderTypes)) {
@@ -192,22 +185,7 @@ export type PermissionedToken = {
   interface: PermissionedTokenInterface;
 };
 
-export const PERMISSIONED_TOKENS: PermissionedToken[] = [
-  {
-    address: "0x7712c34205737192402172409a8F7ccef8aA2AEc",
-    chainId: ChainId.MAINNET,
-    symbol: "BUIDL",
-    proxyType: PermissionedTokenProxyType.None,
-    interface: PermissionedTokenInterface.DSTokenInterface,
-  },
-  {
-    address: "0x14d60E7FDC0D71d8611742720E4C50E7a974020c",
-    chainId: ChainId.MAINNET,
-    symbol: "USCC",
-    proxyType: PermissionedTokenProxyType.ERC1967,
-    interface: PermissionedTokenInterface.ISuperstateTokenV4,
-  },
-];
+export const PERMISSIONED_TOKENS: PermissionedToken[] = [];
 
 /**
  * V4 Resolver address mapping for resolver-based order type detection
@@ -224,7 +202,7 @@ type ReverseResolverMapping = {
 };
 
 export const REVERSE_RESOLVER_MAPPING: ReverseResolverMapping = Object.entries(
-  HYBRID_RESOLVER_ADDRESS_MAPPING
+  HYBRID_RESOLVER_ADDRESS_MAPPING,
 ).reduce((acc: ReverseResolverMapping, [, resolverAddress]) => {
   acc[resolverAddress.toLowerCase()] = { orderType: OrderType.Hybrid };
   return acc;

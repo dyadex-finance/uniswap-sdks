@@ -1,4 +1,9 @@
-import { Currency, CurrencyAmount, Price, TradeType } from "@uniswap/sdk-core";
+import {
+  Currency,
+  CurrencyAmount,
+  Price,
+  TradeType,
+} from "@dyadex-finance/sdk-core";
 
 import { UnsignedPriorityOrder, UnsignedPriorityOrderInfo } from "../order";
 
@@ -7,14 +12,16 @@ import { areCurrenciesEqual } from "./utils";
 export class PriorityOrderTrade<
   TInput extends Currency,
   TOutput extends Currency,
-  TTradeType extends TradeType
+  TTradeType extends TradeType,
 > {
   public readonly tradeType: TTradeType;
   public readonly order: UnsignedPriorityOrder;
-  public readonly expectedAmounts: {
-    expectedAmountIn: string;
-    expectedAmountOut: string;
-  } | undefined;
+  public readonly expectedAmounts:
+    | {
+        expectedAmountIn: string;
+        expectedAmountOut: string;
+      }
+    | undefined;
 
   private _inputAmount: CurrencyAmount<TInput> | undefined;
   private _outputAmounts: CurrencyAmount<TOutput>[] | undefined;
@@ -55,7 +62,7 @@ export class PriorityOrderTrade<
       ? this.getExpectedAmountIn()
       : CurrencyAmount.fromRawAmount(
           this._currencyIn,
-          this.order.info.input.amount.toString()
+          this.order.info.input.amount.toString(),
         );
     this._inputAmount = amount;
     return amount;
@@ -67,7 +74,7 @@ export class PriorityOrderTrade<
     const amounts = this.order.info.outputs.map((output) => {
       // assume single chain ids across all outputs for now
       const currencyOut = this._currenciesOut.find((currency) =>
-        areCurrenciesEqual(currency, output.token, currency.chainId)
+        areCurrenciesEqual(currency, output.token, currency.chainId),
       );
 
       if (!currencyOut) {
@@ -76,7 +83,7 @@ export class PriorityOrderTrade<
 
       return CurrencyAmount.fromRawAmount(
         currencyOut,
-        output.amount.toString()
+        output.amount.toString(),
       );
     });
 
@@ -84,13 +91,10 @@ export class PriorityOrderTrade<
     return amounts;
   }
 
-  private _firstNonFeeOutputAmount:
-    | CurrencyAmount<TOutput>
-    | undefined;
+  private _firstNonFeeOutputAmount: CurrencyAmount<TOutput> | undefined;
 
   private getFirstNonFeeOutputAmount(): CurrencyAmount<TOutput> {
-    if (this._firstNonFeeOutputAmount)
-      return this._firstNonFeeOutputAmount;
+    if (this._firstNonFeeOutputAmount) return this._firstNonFeeOutputAmount;
 
     if (this.order.info.outputs.length === 0) {
       throw new Error("there must be at least one output token");
@@ -99,20 +103,19 @@ export class PriorityOrderTrade<
 
     // assume single chain ids across all outputs for now
     const currencyOut = this._currenciesOut.find((currency) =>
-      areCurrenciesEqual(currency, output.token, currency.chainId)
+      areCurrenciesEqual(currency, output.token, currency.chainId),
     );
 
     if (!currencyOut) {
       throw new Error(
-        "currency output from order must exist in currenciesOut list"
+        "currency output from order must exist in currenciesOut list",
       );
     }
 
-    const amount =
-      CurrencyAmount.fromRawAmount(
-        currencyOut,
-        output.amount.toString()
-      );
+    const amount = CurrencyAmount.fromRawAmount(
+      currencyOut,
+      output.amount.toString(),
+    );
 
     this._firstNonFeeOutputAmount = amount;
     return amount;
@@ -133,7 +136,7 @@ export class PriorityOrderTrade<
   public maximumAmountIn(): CurrencyAmount<TInput> {
     return CurrencyAmount.fromRawAmount(
       this._currencyIn,
-      this.order.info.input.amount.toString()
+      this.order.info.input.amount.toString(),
     );
   }
 
@@ -149,7 +152,7 @@ export class PriorityOrderTrade<
         this.inputAmount.currency,
         this.outputAmount.currency,
         this.inputAmount.quotient,
-        this.outputAmount.quotient
+        this.outputAmount.quotient,
       ))
     );
   }
@@ -163,7 +166,7 @@ export class PriorityOrderTrade<
       this.inputAmount.currency,
       this.outputAmount.currency,
       this.maximumAmountIn().quotient,
-      this.minimumAmountOut().quotient
+      this.minimumAmountOut().quotient,
     );
   }
 
@@ -174,7 +177,7 @@ export class PriorityOrderTrade<
 
     return CurrencyAmount.fromRawAmount(
       this._currencyIn,
-      this.expectedAmounts.expectedAmountIn
+      this.expectedAmounts.expectedAmountIn,
     );
   }
 
@@ -185,7 +188,7 @@ export class PriorityOrderTrade<
 
     return CurrencyAmount.fromRawAmount(
       this._currenciesOut[0],
-      this.expectedAmounts.expectedAmountOut
+      this.expectedAmounts.expectedAmountOut,
     );
   }
 }

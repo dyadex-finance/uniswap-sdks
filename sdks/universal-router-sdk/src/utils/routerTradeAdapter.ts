@@ -1,8 +1,8 @@
-import { MixedRouteSDK, Trade as RouterTrade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Ether, Token, TradeType } from '@uniswap/sdk-core'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
-import { Pool as V3Pool, Route as V3Route, FeeAmount } from '@uniswap/v3-sdk'
-import { Pool as V4Pool, Route as V4Route } from '@uniswap/v4-sdk'
+import { MixedRouteSDK, Trade as RouterTrade } from '@dyadex-finance/router-sdk'
+import { Currency, CurrencyAmount, Ether, Token, TradeType } from '@dyadex-finance/sdk-core'
+import { Pair, Route as V2Route } from '@dyadex-finance/v2-sdk'
+import { Pool as V3Pool, Route as V3Route, FeeAmount } from '@dyadex-finance/v3-sdk'
+import { Pool as V4Pool, Route as V4Route } from '@dyadex-finance/v4-sdk'
 import { BigNumber } from 'ethers'
 import { ETH_ADDRESS, E_ETH_ADDRESS } from './constants'
 

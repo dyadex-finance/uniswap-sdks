@@ -4,7 +4,7 @@ import {
   PermitTransferFromData,
   SignatureTransfer,
   Witness,
-} from "@uniswap/permit2-sdk";
+} from "@dyadex-finance/permit2-sdk";
 import { BigNumber, ethers } from "ethers";
 
 import { BASE_SCALING_FACTOR } from "../../constants/v4";
@@ -135,7 +135,7 @@ function parseSerializedHybridOrder(encoded: string): {
           token,
           minAmount,
           recipient,
-        })
+        }),
       ),
       auctionStartBlock,
       baselinePriorityFee,
@@ -163,7 +163,7 @@ export class UnsignedHybridOrder {
     public readonly info: UnsignedHybridOrderInfo,
     public readonly chainId: number,
     public readonly resolver: string,
-    _permit2Address?: string
+    _permit2Address?: string,
   ) {
     this.permit2Address = getPermit2(chainId, _permit2Address);
   }
@@ -174,7 +174,7 @@ export class UnsignedHybridOrder {
   static parse(
     encoded: string,
     chainId: number,
-    permit2?: string
+    permit2?: string,
   ): UnsignedHybridOrder {
     const { resolver, info } = parseSerializedHybridOrder(encoded);
     // Strip cosigner data for unsigned order
@@ -203,7 +203,7 @@ export class UnsignedHybridOrder {
     json: UnsignedHybridOrderInfoJSON,
     chainId: number,
     resolver: string,
-    _permit2Address?: string
+    _permit2Address?: string,
   ): UnsignedHybridOrder {
     return new UnsignedHybridOrder(
       {
@@ -233,7 +233,7 @@ export class UnsignedHybridOrder {
       },
       chainId,
       resolver,
-      _permit2Address
+      _permit2Address,
     );
   }
 
@@ -242,16 +242,16 @@ export class UnsignedHybridOrder {
    */
   static encodePriceCurveElement(
     duration: number,
-    scalingFactor: BigNumber
+    scalingFactor: BigNumber,
   ): BigNumber {
     if (duration < 0 || duration > MAX_UINT_16) {
       throw new HybridOrderPriceCurveError(
-        `Duration must be between 0 and ${MAX_UINT_16} (fits in 16 bits)`
+        `Duration must be between 0 and ${MAX_UINT_16} (fits in 16 bits)`,
       );
     }
     if (scalingFactor.lt(0) || scalingFactor.gt(MAX_UINT_240)) {
       throw new HybridOrderPriceCurveError(
-        "Scaling factor must be between 0 and 2^240-1"
+        "Scaling factor must be between 0 and 2^240-1",
       );
     }
     return encodePriceCurveElement(duration, scalingFactor);
@@ -308,7 +308,13 @@ export class UnsignedHybridOrder {
         this.info.baselinePriorityFee,
         this.info.scalingFactor,
         this.info.priceCurve,
-        [BigNumber.from(0), [], ZERO_ADDRESS, BigNumber.from(0), BigNumber.from(0)], // Empty cosignerData
+        [
+          BigNumber.from(0),
+          [],
+          ZERO_ADDRESS,
+          BigNumber.from(0),
+          BigNumber.from(0),
+        ], // Empty cosignerData
         "0x", // Empty cosignature
       ],
     ]);
@@ -320,7 +326,7 @@ export class UnsignedHybridOrder {
       this.toPermit(),
       this.permit2Address,
       this.chainId,
-      this.witness()
+      this.witness(),
     ) as PermitTransferFromData;
   }
 
@@ -331,10 +337,10 @@ export class UnsignedHybridOrder {
           this.toPermit(),
           this.permit2Address,
           this.chainId,
-          this.witness()
+          this.witness(),
         ),
-        signature
-      )
+        signature,
+      ),
     );
   }
 
@@ -439,7 +445,7 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
     public readonly info: CosignedHybridOrderInfo,
     public readonly chainId: number,
     public readonly resolver: string,
-    _permit2Address?: string
+    _permit2Address?: string,
   ) {
     super(info, chainId, resolver, _permit2Address);
   }
@@ -450,7 +456,7 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
   static parse(
     encoded: string,
     chainId: number,
-    permit2?: string
+    permit2?: string,
   ): CosignedHybridOrder {
     const { resolver, info } = parseSerializedHybridOrder(encoded);
     return new CosignedHybridOrder(info, chainId, resolver, permit2);
@@ -462,7 +468,7 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
   static fromUnsignedOrder(
     order: UnsignedHybridOrder,
     cosignerData: HybridCosignerData,
-    cosignature: string
+    cosignature: string,
   ): CosignedHybridOrder {
     return new CosignedHybridOrder(
       {
@@ -472,7 +478,7 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
       },
       order.chainId,
       order.resolver,
-      order.permit2Address
+      order.permit2Address,
     );
   }
 
@@ -480,7 +486,7 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
     json: CosignedHybridOrderInfoJSON,
     chainId: number,
     resolver: string,
-    _permit2Address?: string
+    _permit2Address?: string,
   ): CosignedHybridOrder {
     return new CosignedHybridOrder(
       {
@@ -509,24 +515,24 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
         priceCurve: json.priceCurve.map((value) => BigNumber.from(value)),
         cosignerData: {
           auctionTargetBlock: BigNumber.from(
-            json.cosignerData.auctionTargetBlock
+            json.cosignerData.auctionTargetBlock,
           ),
           supplementalPriceCurve: json.cosignerData.supplementalPriceCurve.map(
-            (value) => BigNumber.from(value)
+            (value) => BigNumber.from(value),
           ),
           exclusiveFiller: json.cosignerData.exclusiveFiller ?? ZERO_ADDRESS,
           exclusivityOverrideBps: BigNumber.from(
-            json.cosignerData.exclusivityOverrideBps ?? 0
+            json.cosignerData.exclusivityOverrideBps ?? 0,
           ),
           exclusivityEndBlock: BigNumber.from(
-            json.cosignerData.exclusivityEndBlock ?? 0
+            json.cosignerData.exclusivityEndBlock ?? 0,
           ),
         },
         cosignature: json.cosignature,
       },
       chainId,
       resolver,
-      _permit2Address
+      _permit2Address,
     );
   }
 
@@ -590,7 +596,7 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
   resolve(options: HybridOrderResolutionOptions): ResolvedUniswapXOrder {
     let auctionTargetBlock = this.info.auctionStartBlock;
     let effectivePriceCurve = this.info.priceCurve.map((value) =>
-      BigNumber.from(value)
+      BigNumber.from(value),
     );
 
     if (this.info.cosigner !== ZERO_ADDRESS) {
@@ -609,7 +615,7 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
       if (this.info.cosignerData.supplementalPriceCurve.length > 0) {
         effectivePriceCurve = applySupplementalPriceCurve(
           effectivePriceCurve,
-          this.info.cosignerData.supplementalPriceCurve
+          this.info.cosignerData.supplementalPriceCurve,
         );
       }
     }
@@ -625,11 +631,11 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
       this.info,
       effectivePriceCurve,
       auctionTargetBlock,
-      options.currentBlock
+      options.currentBlock,
     );
 
     const priorityFeeAboveBaseline = options.priorityFeeWei.gt(
-      this.info.baselinePriorityFee
+      this.info.baselinePriorityFee,
     )
       ? options.priorityFeeWei.sub(this.info.baselinePriorityFee)
       : BigNumber.from(0);
@@ -643,7 +649,7 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
       const scalingMultiplier = currentScalingFactor.add(
         this.info.scalingFactor
           .sub(BASE_SCALING_FACTOR)
-          .mul(priorityFeeAboveBaseline)
+          .mul(priorityFeeAboveBaseline),
       );
       return {
         input: {
@@ -656,8 +662,8 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
 
     const scalingMultiplier = currentScalingFactor.sub(
       BASE_SCALING_FACTOR.sub(this.info.scalingFactor).mul(
-        priorityFeeAboveBaseline
-      )
+        priorityFeeAboveBaseline,
+      ),
     );
 
     return {
@@ -706,7 +712,7 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
           this.info.cosignerData.auctionTargetBlock.toString(),
         supplementalPriceCurve:
           this.info.cosignerData.supplementalPriceCurve.map((value) =>
-            value.toString()
+            value.toString(),
           ),
         exclusiveFiller: this.info.cosignerData.exclusiveFiller,
         exclusivityOverrideBps:
@@ -722,14 +728,14 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
     return hashHybridCosignerData(
       this.hash(),
       this.info.cosignerData,
-      this.chainId
+      this.chainId,
     );
   }
 
   recoverCosigner(): string {
     return ethers.utils.recoverAddress(
       this.cosignatureHash(),
-      this.info.cosignature
+      this.info.cosignature,
     );
   }
 }
@@ -738,7 +744,7 @@ export class CosignedHybridOrder extends UnsignedHybridOrder {
 
 function applySupplementalPriceCurve(
   priceCurve: BigNumber[],
-  supplemental: BigNumber[]
+  supplemental: BigNumber[],
 ): BigNumber[] {
   if (supplemental.length === 0) {
     return priceCurve.map((value) => BigNumber.from(value));
@@ -746,7 +752,7 @@ function applySupplementalPriceCurve(
 
   if (priceCurve.length === 0) {
     throw new HybridOrderPriceCurveError(
-      "Supplemental curve provided without base curve"
+      "Supplemental curve provided without base curve",
     );
   }
 
@@ -757,7 +763,7 @@ function applySupplementalPriceCurve(
     const supplementalScaling = BigNumber.from(supplemental[i]);
     if (!sharesScalingDirection(scalingFactor, supplementalScaling)) {
       throw new HybridOrderPriceCurveError(
-        "Supplemental scaling direction mismatch"
+        "Supplemental scaling direction mismatch",
       );
     }
     const mergedScaling = scalingFactor
@@ -765,7 +771,7 @@ function applySupplementalPriceCurve(
       .sub(BASE_SCALING_FACTOR);
     if (mergedScaling.lt(0) || mergedScaling.gt(MAX_UINT_240)) {
       throw new HybridOrderPriceCurveError(
-        "Supplemental scaling factor out of range"
+        "Supplemental scaling factor out of range",
       );
     }
     combined[i] = encodePriceCurveElement(duration, mergedScaling);
@@ -777,7 +783,7 @@ function deriveCurrentScalingFactor(
   order: UnsignedHybridOrderInfo | CosignedHybridOrderInfo,
   priceCurve: BigNumber[],
   targetBlock: BigNumber,
-  fillBlock: BigNumber
+  fillBlock: BigNumber,
 ): BigNumber {
   if (targetBlock.isZero()) {
     if (priceCurve.length !== 0) {
@@ -793,7 +799,7 @@ function deriveCurrentScalingFactor(
   const blocksPassed = fillBlock.sub(targetBlock).toNumber();
   const currentScalingFactor = getCalculatedScalingFactor(
     priceCurve,
-    blocksPassed
+    blocksPassed,
   );
 
   if (!sharesScalingDirection(order.scalingFactor, currentScalingFactor)) {
@@ -805,7 +811,7 @@ function deriveCurrentScalingFactor(
 
 function getCalculatedScalingFactor(
   parameters: BigNumber[],
-  blocksPassed: number
+  blocksPassed: number,
 ): BigNumber {
   if (parameters.length === 0) {
     return BASE_SCALING_FACTOR;
@@ -834,7 +840,7 @@ function getCalculatedScalingFactor(
       if (previousDuration === 0 && lastZeroDurationScaling) {
         if (!sharesScalingDirection(lastZeroDurationScaling, scalingFactor)) {
           throw new HybridOrderPriceCurveError(
-            "Zero duration scaling mismatch"
+            "Zero duration scaling mismatch",
           );
         }
         return locateCurrentAmount(
@@ -843,7 +849,7 @@ function getCalculatedScalingFactor(
           blocksCounted,
           blocksPassed,
           segmentEnd,
-          lastZeroDurationScaling.gt(BASE_SCALING_FACTOR)
+          lastZeroDurationScaling.gt(BASE_SCALING_FACTOR),
         );
       }
 
@@ -862,7 +868,7 @@ function getCalculatedScalingFactor(
         blocksCounted,
         blocksPassed,
         segmentEnd,
-        scalingFactor.gt(BASE_SCALING_FACTOR)
+        scalingFactor.gt(BASE_SCALING_FACTOR),
       );
     }
 
@@ -883,7 +889,7 @@ function locateCurrentAmount(
   startBlock: number,
   currentBlock: number,
   endBlock: number,
-  roundUp: boolean
+  roundUp: boolean,
 ): BigNumber {
   if (startAmount.eq(endAmount)) {
     return endAmount;
@@ -893,7 +899,7 @@ function locateCurrentAmount(
 
   if (duration === 0) {
     throw new HybridOrderPriceCurveError(
-      "Invalid duration: zero duration when it shouldn't be"
+      "Invalid duration: zero duration when it shouldn't be",
     );
   }
   const elapsed = currentBlock - startBlock;
@@ -920,7 +926,7 @@ function locateCurrentAmount(
 
 function scaleOutputs(
   outputs: CosignedHybridOrderInfo["outputs"],
-  scalingMultiplier: BigNumber
+  scalingMultiplier: BigNumber,
 ): TokenAmount[] {
   return outputs.map((output) => ({
     token: output.token,
@@ -930,7 +936,7 @@ function scaleOutputs(
 
 function scaleInput(
   input: CosignedHybridOrderInfo["input"],
-  scalingMultiplier: BigNumber
+  scalingMultiplier: BigNumber,
 ): TokenAmount {
   return {
     token: input.token,
@@ -963,7 +969,7 @@ function decodePriceCurveElement(value: BigNumber): {
 
 function encodePriceCurveElement(
   duration: number,
-  scalingFactor: BigNumber
+  scalingFactor: BigNumber,
 ): BigNumber {
   return BigNumber.from(duration)
     .shl(PRICE_CURVE_DURATION_SHIFT)
