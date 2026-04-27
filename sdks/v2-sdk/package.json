@@ -1,8 +1,8 @@
 {
-  "name": "@uniswap/v2-sdk",
+  "name": "@dyadex-finance/v2-sdk",
   "version": "4.20.0",
   "description": "🛠 An SDK for building applications on top of Uniswap V2",
-  "repository": "https://github.com/Uniswap/sdks.git",
+  "repository": "https://github.com/dyadex-finance/uniswap-sdks",
   "keywords": [
     "uniswap",
     "ethereum"
@@ -36,7 +36,7 @@
     "@ethersproject/address": "^5.0.2",
     "@ethersproject/bignumber": "^5.5.0",
     "@ethersproject/solidity": "^5.0.9",
-    "@uniswap/sdk-core": "workspace:*",
+    "@dyadex-finance/sdk-core": "workspace:*",
     "jsbi": "^3.1.4",
     "tiny-invariant": "^1.1.0",
     "tiny-warning": "^1.0.3",
@@ -45,7 +45,7 @@
   "devDependencies": {
     "@types/big.js": "^4.0.5",
     "@typescript-eslint/parser": "^5.0.0",
-    "@uniswap/v2-core": "^1.0.1",
+    "@dyadex-finance/v2-core": "^1.0.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-react-app": "7.0.1",

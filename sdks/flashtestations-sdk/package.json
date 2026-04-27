@@ -1,9 +1,9 @@
 {
-  "name": "@uniswap/flashtestations-sdk",
+  "name": "@dyadex-finance/flashtestations-sdk",
   "version": "1.1.0",
   "author": "Melvillian",
   "description": "⚒️ An SDK for working with Flashteststations",
-  "repository": "https://github.com/Uniswap/sdks.git",
+  "repository": "https://github.com/dyadex-finance/uniswap-sdks",
   "keywords": [
     "flashteststations",
     "ethereum",

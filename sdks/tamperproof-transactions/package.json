@@ -1,5 +1,5 @@
 {
-  "name": "@uniswap/tamperproof-transactions",
+  "name": "@dyadex-finance/tamperproof-transactions",
   "version": "2.0.0",
   "type": "module",
   "main": "./lib/index.js",
@@ -9,8 +9,8 @@
     "dist/**",
     "lib/**"
   ],
-  "repository": "https://github.com/Uniswap/sdks.git",
-  "author": "Uniswap Labs Security <security@uniswap.org>",
+  "repository": "https://github.com/dyadex-finance/uniswap-sdks",
+  "author": "Uniswap Labs Security <security@dyadex-finance.org>",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^18.7.16",

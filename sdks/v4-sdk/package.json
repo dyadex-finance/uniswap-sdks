@@ -1,8 +1,8 @@
 {
-  "name": "@uniswap/v4-sdk",
+  "name": "@dyadex-finance/v4-sdk",
   "version": "2.0.0",
   "description": "⚒️ An SDK for building applications on top of Uniswap V4",
-  "repository": "https://github.com/Uniswap/sdks.git",
+  "repository": "https://github.com/dyadex-finance/uniswap-sdks",
   "keywords": [
     "uniswap",
     "ethereum"
@@ -36,9 +36,9 @@
     "@ethersproject/abi": "^5.5.0",
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/solidity": "^5.0.9",
-    "@uniswap/sdk-core": "workspace:*",
-    "@uniswap/v3-periphery": "^1.1.1",
-    "@uniswap/v3-sdk": "workspace:*",
+    "@dyadex-finance/sdk-core": "workspace:*",
+    "@dyadex-finance/v3-periphery": "^1.1.1",
+    "@dyadex-finance/v3-sdk": "workspace:*",
     "ethers": "^5.7.0",
     "jsbi": "^3.1.4",
     "tiny-invariant": "^1.1.0",
